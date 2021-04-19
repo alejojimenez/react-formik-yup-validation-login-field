@@ -4,6 +4,8 @@ import * as yup from 'yup';
 import { Form, Button } from 'react-bootstrap';
 import './formLogin.css';
 
+const expression_regular = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+
 const validationSchema = yup.object().shape({
     formName: yup.string()
         .min(2, "Minimo 2 caracteres")
@@ -12,7 +14,8 @@ const validationSchema = yup.object().shape({
     formEmail: yup.string()
         .min(2, "Minimo 2 caracteres")
         .max(100, "Maximo 100 caracteres")
-        .required("* Dato requerido"),
+        .required("* Dato requerido")
+        .matches(expression_regular, "** No cumple con el formato requerido"),
 });
 
 const formLogin = () => {
@@ -23,9 +26,14 @@ const formLogin = () => {
                 initialValues={{ formName: '', formEmail: '' }}
                 validationSchema={validationSchema}
                 onSubmit={ (values, {setSubmitting, resetForm }) => {
+                    // when button submit form and form is the proces of submitting
                     setSubmitting(true);
-                    resetForm();
-                    setSubmitting(false);
+                    alert(JSON.stringify(values, null, 2));
+                    // reset form after submissionis complete
+                    setTimeout(() => {
+                        resetForm();
+                        setSubmitting(false);
+                    }, 1500);
                 }}
             >
                 {
